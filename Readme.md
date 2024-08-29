@@ -10,7 +10,18 @@ This api provide you blazing fast card/link generator with opengraph ingection f
 
 # Example
 - profile
-  ![image](static/profile.png)
+  - ![image](static/profile.png)
+  - with header Accept:"application/json"
+  ```json
+  {
+      "id": "965639480797184021",
+      "avatar": "6d90a6ea41285c836a66ceb7679a1cbc",
+      "global_name": "#͡nqcq",
+      "username": "towinok",
+      "banner_color": "#d5d5d5",
+      "bio": "> DevOps & Rust developer.\n\n*Любитель белых-пепельных волос и золото-кровавых глаз*"
+  }
+  ```
 - tracing
   ![image](static/tracing.png)
 
