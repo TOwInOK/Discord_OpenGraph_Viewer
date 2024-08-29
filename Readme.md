@@ -7,6 +7,7 @@ This api provide you blazing fast card/link generator with opengraph ingection f
 - tracing
 - cache for 1 hour
 - no display only one name if custom name and name is same
+- normal and json type of view
 
 # Example
 - profile
