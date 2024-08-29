@@ -1,0 +1,99 @@
+name: CI Rust -> Check code and make git version
+
+on:
+  push:
+    branches: ["main"]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+
+  make-cache:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Make Cache
+      uses: Swatinem/rust-cache@v2.7.3
+      with:
+          save-if: true
+          cache-all-crates: true
+          shared-key: tests
+          
+    - name: Update Toolchain
+      run: rustup toolchain install stable --profile minimal --no-self-update
+
+    - name: Job
+      run: cargo build -F full
+       
+  Clippy:
+    needs: 
+      - make-cache
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Load Cache
+        uses: Swatinem/rust-cache@v2.7.3
+        with:
+          # save-if: false
+          shared-key: tests
+          key: clippy
+      - name: Update Toolchain
+        run: rustup toolchain install stable --profile minimal --no-self-update
+          
+      - name: Job
+        run: cargo clippy -- -D warnings
+      
+  Doc-check:
+    needs: 
+      - make-cache
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Load Cache
+        uses: Swatinem/rust-cache@v2.7.3
+        with:
+          # save-if: false
+          shared-key: tests
+          key: doc
+      - name: Update Toolchain
+        run: rustup toolchain install stable --profile minimal --no-self-update
+          
+      - name: Job
+        run: cargo test -F full --doc --locked
+
+  Make-Tag:
+    needs: 
+      - Clippy
+      - Doc-check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Save version 
+        run: |
+           version=$(grep '^version =' Cargo.toml | head -n 1 | cut -d '"' -f 2)
+           echo "version=$version" >> $GITHUB_ENV
+           echo "Extracted version: $version"
+           
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+      - name: Make tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git fetch --tags 
+          if git show-ref --tags | grep -q "refs/tags/v$version"; then
+            git tag -d "v$version"
+            git push origin --delete "v$version"
+          fi
+          git tag "v$version"
+          git push origin "v$version"
+              
