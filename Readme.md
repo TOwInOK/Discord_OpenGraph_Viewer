@@ -27,8 +27,8 @@ This api provide you blazing fast card/link generator with opengraph ingection f
     - in progress
   4. download release tag
     - go to latest tag
-    - download any zip
-    - unzip zip :)
+    - download any zip / or download file
+    - unzip zip :) / skip if download file
     - touch wom... .env
     - fill it
     - run it
