@@ -39,3 +39,12 @@ This api provide you blazing fast card/link generator with opengraph ingection f
   - Click on any user
   - 3 dots (**for yourself** click on user profle. close to settings button.)
   - copy user id
+2. Where can I find token?
+  - Go to browser
+  - Login to discord at discord web app
+  - Go to Dev Tools
+  - open network
+  - click at all
+  - check any packet with Authorization header
+  - copy this header
+  - paste in .env in Token field
