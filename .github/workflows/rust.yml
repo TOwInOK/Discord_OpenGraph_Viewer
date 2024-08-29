@@ -87,8 +87,9 @@ jobs:
           fi
           git tag "v$version"
           git checkout --orphan temp-tag
+          mv release/dov ../dov
           git rm -rf .
-          cp release/dov .
+          mv ../dov ./dov
           git add dov
           git commit -m "Release $version"
           git tag -f "v$version"
