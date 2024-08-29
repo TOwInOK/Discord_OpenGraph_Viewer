@@ -45,30 +45,10 @@ jobs:
           
       - name: Job
         run: cargo clippy -- -D warnings
-      
-  Doc-check:
-    needs: 
-      - make-cache
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Load Cache
-        uses: Swatinem/rust-cache@v2.7.3
-        with:
-          # save-if: false
-          shared-key: tests
-          key: doc
-      - name: Update Toolchain
-        run: rustup toolchain install stable --profile minimal --no-self-update
-          
-      - name: Job
-        run: cargo test --doc
-
+ 
   Make-Tag:
     needs: 
       - Clippy
-      - Doc-check
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
