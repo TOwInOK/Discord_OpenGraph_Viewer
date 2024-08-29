@@ -1,7 +1,9 @@
 [package]
 name = "ds_profile_viewer"
-version = "0.1.0"
+version = "1.0.0"
 edition = "2021"
+authors = ["60252419+TOwInOK@users.noreply.github.com"]
+license = "MIT"
 
 [dependencies]
 anyhow = "1.0.86"
