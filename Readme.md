@@ -26,7 +26,12 @@ This api provide you blazing fast card/link generator with opengraph ingection f
   3. use docker-compose
     - in progress
   4. download release tag
-    - in progress
+    - go to latest tag
+    - download any zip
+    - unzip zip :)
+    - touch wom... .env
+    - fill it
+    - run it
 - usage
   http://your-cool-ip:port/id/{id}
   if you using revers proxy, you know it...
