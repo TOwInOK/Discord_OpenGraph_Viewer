@@ -63,7 +63,7 @@ jobs:
         run: rustup toolchain install stable --profile minimal --no-self-update
           
       - name: Job
-        run: cargo test --doc --locked
+        run: cargo test --doc
 
   Make-Tag:
     needs: 
