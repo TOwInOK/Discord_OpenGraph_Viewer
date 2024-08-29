@@ -25,7 +25,7 @@ jobs:
       run: rustup toolchain install stable --profile minimal --no-self-update
 
     - name: Job
-      run: cargo build -F full
+      run: cargo build
        
   Clippy:
     needs: 
@@ -63,7 +63,7 @@ jobs:
         run: rustup toolchain install stable --profile minimal --no-self-update
           
       - name: Job
-        run: cargo test -F full --doc --locked
+        run: cargo test --doc --locked
 
   Make-Tag:
     needs: 
@@ -74,26 +74,42 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         
+      - name: Update Toolchain
+        run: rustup toolchain install stable --profile minimal --no-self-update
+
+      - name: Build project
+        run: cargo build --release
+
+      - name: Prepare release directory
+        run: |
+          mkdir release
+          cp target/release/ds_profile_viewer ./release/dov 
+          
       - name: Save version 
         run: |
            version=$(grep '^version =' Cargo.toml | head -n 1 | cut -d '"' -f 2)
            echo "version=$version" >> $GITHUB_ENV
            echo "Extracted version: $version"
-           
+
       - name: Configure Git
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          
-      - name: Make tag
+
+      - name: Create tag with binary
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git fetch --tags 
+          git fetch --tags
           if git show-ref --tags | grep -q "refs/tags/v$version"; then
             git tag -d "v$version"
             git push origin --delete "v$version"
           fi
           git tag "v$version"
-          git push origin "v$version"
-              
+          git checkout --orphan temp-tag
+          # git rm -rf .
+          cp release/dov .
+          git add dov
+          git commit -m "Release $version"
+          git tag -f "v$version"
+          git push origin "v$version" --force
